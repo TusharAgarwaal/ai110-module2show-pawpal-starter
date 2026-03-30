@@ -6,14 +6,19 @@
 
 - Briefly describe your initial UML design.
 --- 
+I created 5 classes: Pet, Owner, Task, Plan and Scheduler. 
+
 - What classes did you include, and what responsibilities did you assign to each?
+--- Pet contains info about pets and has One to One relationship with the Owner, which has info about the owner of the pet.
+Task is another class, containing info about care activity and has Many to One relationship to Owner.
+All these 3 classes input data to the class Scheduler which then gives output in class Plan.
 
 **b. Design changes**
 
 - Did your design change during implementation?
+--- Yes
 - If yes, describe at least one change and why you made it.
-
----
+--- Indeed the design changed, the classes didn't had all the relationships defined between them which made it succeptible to any logic bottleneck. AI suggested to look for time complexity related issue which was applied with the design.
 
 ## 2. Scheduling Logic and Tradeoffs
 
