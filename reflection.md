@@ -46,12 +46,18 @@ All these 3 classes input data to the class Scheduler which then gives output in
 **a. How you used AI**
 
 - How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
+--- I asked AI to create the architecture, to write code snippets, review test cases and suggest a better alternative for improvement.
+
 - What kinds of prompts or questions were most helpful?
+--- For example, "Suggest class diagram for the 5 classes" which helped in understanding the relationship between the classes and what to add in the code to improve those relationships.
 
 **b. Judgment and verification**
 
 - Describe one moment where you did not accept an AI suggestion as-is.
+--- Initially while creating the UML diagram, AI suggested me a basic diagram with bad table elements and poorly defined relationships. I ran the code and manually applied the logic.
+
 - How did you evaluate or verify what the AI suggested?
+--- For UML diagram, I ran the code in Mermaid Live Editor, which gave me a clear picture of the logic applied by AI. Then I evaluated the code for better elements and relationships.
 
 ---
 
@@ -60,12 +66,19 @@ All these 3 classes input data to the class Scheduler which then gives output in
 **a. What you tested**
 
 - What behaviors did you test?
+--- I tested for sorting, recurrence or conflict scenarios.
+
 - Why were these tests important?
+--- It helps in assigning the tasks correctly to create the best plan possible. Sometimes there are overlapping tasks, or one task completed but similar task needs to be scheduled for later date/time....., so in scenarios like these, testing was important to verify the changes applied.
 
 **b. Confidence**
 
 - How confident are you that your scheduler works correctly?
+--- Very confident, 5 stars. It covers most of the scenarios with zero error.
+![alt text](image.png)
+
 - What edge cases would you test next if you had more time?
+--- One would be Time details for the task shouldn't be negative or wrong format, to ensure the code doesn't break.
 
 ---
 
@@ -74,11 +87,14 @@ All these 3 classes input data to the class Scheduler which then gives output in
 **a. What went well**
 
 - What part of this project are you most satisfied with?
+--- Designing Systems with AI is something to learn from. It showed the potential and methods on how to use AI to improve an existing system.
 
 **b. What you would improve**
 
 - If you had another iteration, what would you improve or redesign?
+--- I think I would have worked better with UI based on looks or even tried to add some animation to the app while surfing.
 
 **c. Key takeaway**
 
 - What is one important thing you learned about designing systems or working with AI on this project?
+--- AI aids a lot in designing, but a proper logical oversight along with argument is constantly required for the smooth process. AI may be wrong and that's why we should be judgemental about it's every activity.

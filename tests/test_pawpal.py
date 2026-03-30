@@ -81,3 +81,46 @@ def test_mark_complete_daily_recurring_updates_due_date():
     assert next_task.frequency == "daily"
     assert next_task.completed is False
     assert next_task.due_date == date.today() + timedelta(days=1)
+
+
+def test_sorting_correctness_chronological_order():
+    pet = Pet(name="Mochi", species="dog", age=3)
+    pet.tasks = [
+        Task(title="Task C", duration_minutes=20, priority="medium", earliest_minute=14*60, latest_minute=15*60),
+        Task(title="Task A", duration_minutes=15, priority="medium", earliest_minute=8*60, latest_minute=9*60),
+        Task(title="Task B", duration_minutes=10, priority="medium", earliest_minute=10*60, latest_minute=11*60),
+    ]
+    owner = Owner(name="Jordan", daily_available_minutes=120, availability_windows=[(7*60, 18*60)], pets=[pet])
+
+    plan = Scheduler().generate_plan(owner=owner)
+    titles = [task.title for task in plan.tasks]
+    assert titles == ["Task A", "Task B", "Task C"]
+
+
+def test_recurrence_logic_daily_mark_complete_creates_next_task():
+    pet = Pet(name="Mochi", species="dog", age=3)
+    task = Task(title="Daily Walk", duration_minutes=30, priority="high", frequency="daily")
+    pet.tasks.append(task)
+
+    owner = Owner(name="Jordan", daily_available_minutes=120, pets=[pet])
+    pet.complete_task(task)
+
+    # Completed current and created next due date one day ahead
+    all_tasks = owner.get_tasks_for_pet("Mochi")
+    assert len(all_tasks) == 2
+    assert all_tasks[0].completed is True
+    assert all_tasks[1].completed is False
+    assert all_tasks[1].due_date == date.today() + timedelta(days=1)
+
+
+def test_conflict_detection_duplicate_time():
+    pet1 = Pet(name="Mochi", species="dog", age=3, tasks=[
+        Task(title="Feeding", duration_minutes=20, priority="high", earliest_minute=8*60, latest_minute=8*60+20),
+    ])
+    pet2 = Pet(name="Luna", species="cat", age=4, tasks=[
+        Task(title="Medicine", duration_minutes=20, priority="high", earliest_minute=8*60, latest_minute=8*60+20),
+    ])
+    owner = Owner(name="Jordan", daily_available_minutes=120, availability_windows=[(8*60, 9*60)], pets=[pet1, pet2])
+
+    plan = Scheduler().generate_plan(owner=owner)
+    assert "No slot in window" in plan.explanation

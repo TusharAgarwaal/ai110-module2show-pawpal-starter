@@ -42,6 +42,23 @@ pip install -r requirements.txt
 6. Connect your logic to the Streamlit UI in `app.py`.
 7. Refine UML so it matches what you actually built.
 
+## Features
+
+The final PawPal+ implementation includes the following algorithmic features:
+
+- Task model with priority, duration, earliest/latest time window, category, notes, and due date.
+- Validation via `Task.is_valid()` to ensure constraints are a consistent schedule candidate.
+- Recurring tasks support:
+  - `frequency` of `once`, `daily`, or `weekly`
+  - `Task.next_occurrence()` and `Task.mark_complete()` for rollover behavior
+- Urgency scoring in `Task.urgency_score()` combining priority weight, time slack, and recurrence weight.
+- Owner availability windows with `set_availability_windows_from_strings()` and hard daily minute cap.
+- Feasibility checking in `Owner.is_task_feasible()` (windows, completed status, task bounds).
+- Scheduler selects tasks by urgency and fits them greedily into availability windows without exceeding limits.
+- Time slot assignment avoids overlap, and task drop reasoning is returned when no fit is found.
+- Conflict detection (`Scheduler.detect_conflicts()`) with human-readable warnings and back-end plan explanation.
+- Plan object (`Plan`) includes scheduled tasks, total duration, conflicts, and textual explanation.
+
 ## Smarter Scheduling
 
 This version includes a stronger scheduler engine with:
@@ -53,3 +70,4 @@ This version includes a stronger scheduler engine with:
 - Per-pet and completion-status filtering of task lists for better control.
 - Human-readable plan explanation and dropped-task reasoning.
 
+![alt text](image-1.png)

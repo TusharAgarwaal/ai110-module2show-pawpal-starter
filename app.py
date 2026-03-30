@@ -75,7 +75,50 @@ if st.button("Generate schedule"):
             daily_available_minutes=int(daily_minutes),
             pets=[pet],
         )
-        plan = Scheduler().generate_plan(owner=owner)
+
+        scheduler = Scheduler()
+
+        # Sorting helper: display before scheduling
+        sorted_tasks = sorted(
+            owner.get_all_tasks(),
+            key=lambda t: (t.earliest_minute, t.duration_minutes, t.title),
+        )
+
+        st.info("Tasks sorted by earliest start time")
+        st.table([
+            {
+                "title": t.title,
+                "pet": owner.get_tasks_for_pet("Mochi").count(t) and "Mochi" or "Luna" if hasattr(t, 'title') else "Unknown",
+                "start": f"{t.earliest_minute//60:02d}:{t.earliest_minute%60:02d}",
+                "duration": t.duration_minutes,
+                "priority": t.priority,
+                "status": "done" if t.completed else "todo",
+            }
+            for t in sorted_tasks
+        ])
+
+        plan = scheduler.generate_plan(owner=owner)
 
         st.success(f"Schedule for {date.today()}")
-        st.text(plan.explanation)
+        st.info("Use the plan details below to track tasks and avoid conflicts")
+
+        if plan.tasks:
+            st.subheader("Final Plan")
+            st.table([
+                {
+                    "title": task.title,
+                    "duration": task.duration_minutes,
+                    "priority": task.priority,
+                    "window": f"{task.earliest_minute//60:02d}:{task.earliest_minute%60:02d} - {task.latest_minute//60:02d}:{task.latest_minute%60:02d}",
+                    "due_date": task.due_date or "N/A",
+                }
+                for task in plan.tasks
+            ])
+        else:
+            st.warning("No tasks could be scheduled. Check availability and task constraints.")
+
+        if plan.conflicts:
+            st.warning("Conflicts detected:")
+            for conflict in plan.conflicts:
+                st.warning(conflict)
+
