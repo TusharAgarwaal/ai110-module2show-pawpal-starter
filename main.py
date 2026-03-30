@@ -32,14 +32,7 @@ luna = Pet(
     species="cat",
     age=5,
     tasks=[
-        Task(
-            title="Playtime",
-            duration_minutes=20,
-            priority="medium",
-            earliest_minute=17 * 60,  # 5:00 PM
-            latest_minute=19 * 60,    # 7:00 PM
-            category="enrichment",
-        ),
+        # Intentionally out of chronological order to demonstrate sorting/filtering
         Task(
             title="Evening feeding",
             duration_minutes=10,
@@ -47,6 +40,14 @@ luna = Pet(
             earliest_minute=18 * 60,  # 6:00 PM
             latest_minute=19 * 60,    # 7:00 PM
             category="feeding",
+        ),
+        Task(
+            title="Playtime",
+            duration_minutes=20,
+            priority="medium",
+            earliest_minute=17 * 60,  # 5:00 PM
+            latest_minute=19 * 60,    # 7:00 PM
+            category="enrichment",
         ),
     ],
 )
@@ -62,6 +63,35 @@ jordan = Owner(
     ],
     pets=[mochi, luna],
 )
+
+# ── Add out-of-order tasks and status filtering demo ───────────────────────────
+
+mochi.tasks.append(
+    Task(
+        title="Late afternoon brush",  # this will be sorted by scheduler logic
+        duration_minutes=15,
+        priority="low",
+        earliest_minute=16 * 60,
+        latest_minute=18 * 60,
+        category="grooming",
+    )
+)
+
+# Mark one task completed to test completed filtering
+mochi.tasks[0].mark_complete()  # Morning walk done
+
+print("\n--- TASK FILTER/STATUS DEMO ---")
+print("All tasks (unfiltered):")
+for t in jordan.get_all_tasks():
+    print(f"  - [{t.priority}] {t.title} ({'done' if t.completed else 'todo'})")
+
+print("\nIncomplete tasks for Jordan:")
+for t in jordan.get_tasks_by_status(completed=False):
+    print(f"  - {t.title} (pet-aware, incomplete)")
+
+print("\nTasks for Mochi (incomplete):")
+for t in jordan.get_tasks_by_status(completed=False, pet_name='Mochi'):
+    print(f"  - {t.title}")
 
 # ── Schedule ──────────────────────────────────────────────────────────────────
 
